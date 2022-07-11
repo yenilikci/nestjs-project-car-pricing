@@ -8,7 +8,7 @@ import {
 } from '@nestjs/common';
 import { CreateReportDto } from './dtos/create-report.dto';
 import { ReportsService } from './reports.service';
-import { AuthGuard } from '../guards/auth.guard';
+import { AuthGuard } from './guards/auth.guard';
 import { CurrentUser } from '../users/decorators/current-user.decorator';
 import { User } from '../users/user.entity';
 import { ReportDto } from './dtos/report.dto';
@@ -27,5 +27,7 @@ export class ReportsController {
   }
 
   @Patch('/:id')
-  approveReport(@Param('id') id: string, @Body() body: ApproveReportDto) {}
+  approveReport(@Param('id') id: number, @Body() body: ApproveReportDto) {
+    return this.reportsService.changeApproval(id, body.approved);
+  }
 }
