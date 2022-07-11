@@ -14,12 +14,13 @@ import {
 import { CreateUserDto } from './dtos/create-user.dto';
 import { UpdateUserDto } from './dtos/update-user.dto';
 import { UsersService } from './users.service';
-import { Serialize } from 'src/interceptors/serialize.interceptor';
+import { Serialize } from '../interceptors/serialize.interceptor';
 import { UserDto } from './dtos/user.dto';
 import { AuthService } from './auth.service';
-import { User } from './user.entity';
 import { CurrentUser } from './decorators/current-user.decorator';
+import { User } from './user.entity';
 import { AuthGuard } from './guards/auth.guard';
+
 @Controller('auth')
 @Serialize(UserDto)
 export class UsersController {
@@ -27,11 +28,6 @@ export class UsersController {
     private usersService: UsersService,
     private authService: AuthService,
   ) {}
-
-  // @Get('/whoami')
-  // whoAmI(@Session() session: any) {
-  //   return this.usersService.findOne(session.userId);
-  // }
 
   @Get('/whoami')
   @UseGuards(AuthGuard)
@@ -58,12 +54,11 @@ export class UsersController {
     return user;
   }
 
-  // @UseInterceptors(new SerializeInterceptor(UserDto))
   @Get('/:id')
   async findUser(@Param('id') id: string) {
     const user = await this.usersService.findOne(parseInt(id));
     if (!user) {
-      throw new NotFoundException(`User not found`);
+      throw new NotFoundException('user not found');
     }
     return user;
   }
